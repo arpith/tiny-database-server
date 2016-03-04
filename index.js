@@ -20,7 +20,6 @@ function getFromDatabase(key) {
 
 function requestHandler(req) {
   // Checks the route (get or set) and returns a promise to do the operation
-  // The promise returns a response object that can be serialised into JSON
   let parsedURL = url.parse(req.url);
   let parsedQuery = querystring.parse(parsedURL.query);
   let response = {status: 200, body: {success: true}};
