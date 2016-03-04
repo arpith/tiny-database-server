@@ -39,7 +39,7 @@ function requestListener(req, res) {
     res.end(response);
   }).catch((status) => {
     res.writeHead(status, header);
-    res.end(response);
+    res.end();
   });
 }
    
