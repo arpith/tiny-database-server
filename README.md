@@ -16,3 +16,7 @@ The server is accessible on http://localhost:4000/
 `curl http://localhost:4000/get?key=name`
 
 This will return the value previously stored.
+
+### Running the tests
+1. Install and start the server
+2. In another terminal window/tab run `npm test`
