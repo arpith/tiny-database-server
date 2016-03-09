@@ -26,7 +26,9 @@ function requestHandler(req) {
   if (parsedURL.pathname === '/set') {
     return addToDatabase(parsedQuery);
   } else if (parsedURL.pathname === '/get') {
-    return getFromDatabase(parsedQuery.key);
+    // Will fail if multiple keys are requested
+    let key = parsedURL.query.split('key=')[1];
+    return getFromDatabase(key);
   } else {
     return Promise.reject(400);
   }
