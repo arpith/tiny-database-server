@@ -9,8 +9,8 @@ const PORT = 4000;
 
 let database = {};
 
-function addToDatabase(obj) {
-  database = Object.assign(database, obj);
+function addToDatabase(key, value) {
+  database[key] = value;
   return Promise.resolve();
 }
 
@@ -21,10 +21,14 @@ function getFromDatabase(key) {
 function requestHandler(req) {
   // Checks the route (get or set) and returns a promise to do the operation
   let parsedURL = url.parse(req.url);
-  let parsedQuery = querystring.parse(parsedURL.query);
   let response = {status: 200, body: {success: true}};
   if (parsedURL.pathname === '/set') {
-    return addToDatabase(parsedQuery);
+    // Only handle one key/value
+    // Will fail if '=' is in the key or the value
+    let splitQuery = parsedURL.query.split('=');
+    let key = splitQuery[0];
+    let value = splitQuery[1];
+    return addToDatabase(key, value);
   } else if (parsedURL.pathname === '/get') {
     // Will fail if multiple keys are requested
     let key = parsedURL.query.split('key=')[1];
