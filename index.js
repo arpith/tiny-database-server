@@ -10,7 +10,8 @@ const PORT = 4000;
 let database = {};
 
 function addToDatabase(key, value) {
-  database[key] = value;
+  let unescapedValue = querystring.unescape(value);
+  database[key] = unescapedValue;
   return Promise.resolve();
 }
 
