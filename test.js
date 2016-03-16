@@ -11,14 +11,19 @@ function randomString() {
   return encodeURIComponent(token);
 }
 
-function set(obj) {
+function set(key, value) {
+  let obj = {};
+  obj[key] = value;
   let query = querystring.stringify(obj);
   let url = BASE_URL + '/set?' + query;
   return fetch(url).then(res => res.status).catch(err => Promise.reject(err));
 }
 
 function get(key) {
-  let url = BASE_URL + '/get?key=' + key;
+  let obj = {};
+  obj.key = key;
+  let query = querystring.stringify(obj);
+  let url = BASE_URL + '/get?' + query;
   return fetch(url).then(res => res.text()).catch(err => Promise.reject(err));
 }
 
@@ -35,9 +40,7 @@ function testSetSingleKey() {
   const err = "Set Single Key Test Failed: \n";
   const key = randomString();
   const value = randomString();
-  let obj = {};
-  obj[key] = value;
- return set(obj).then(() => check(key, value)).catch(e => Promise.reject(err + e));
+  return set(key, value).then(() => check(key, value)).catch(e => Promise.reject(err + e));
 }
 
 function testSetMultipleKeys() {
@@ -51,10 +54,12 @@ function testSetMultipleKeys() {
     obj[key] = value;
     keys.push(key);
   }
-  return set(obj).then(() => {
-    const promiseArr = keys.map(key => check(key, obj[key]));
-    return Promise.all(promiseArr);
-  }).catch(e => Promise.reject(err + e));
+  const promiseArr = keys.map((key) => {
+    return set(key, obj[key])
+      .then(() => check(key, obj[key]))
+      .catch(e => Promise.reject(err + e));
+  });
+  return Promise.all(promiseArr);
 }
 
 testSetSingleKey().then(testSetMultipleKeys).then(() => {
