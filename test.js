@@ -27,6 +27,11 @@ function get(key) {
   return fetch(url).then(res => res.text()).catch(err => Promise.reject(err));
 }
 
+function getSnapshot() {
+  let url = BASE_URL + '/get?snapshot=true';
+  return fetch(url).then(res => res.json()).catch(err => Promise.reject(err));
+}
+
 function check(key, value) {
   return get(key).then((returnedValue) => {
     const msg = "Got " + returnedValue + " expected " + value + " (for key " + key + ")";
@@ -62,7 +67,36 @@ function testSetMultipleKeys() {
   return Promise.all(promiseArr);
 }
 
-testSetSingleKey().then(testSetMultipleKeys).then(() => {
+function testSnapshot() {
+  console.log("Going to perform Snapshot Test");
+  const err = "Snapshot Test Failed: \n";
+  let obj = {};
+  let keys = [];
+  for (var i=0; i<10; i++) {
+    const key = randomString();
+    const value = randomString();
+    obj[key] = value;
+    keys.push(key);
+  }
+  let promiseArr = keys.map(key => set(key, obj[key]));
+  return Promise.all(promiseArr).then(getSnapshot).then((snapshot) => {
+    console.log("SNAPSHOT:");
+    console.log(snapshot);
+    console.log("LOCAL:");
+    console.log(obj);
+    let promiseArr = keys.map((key) => {
+      if (snapshot[key] === obj[key]) {
+        return Promise.resolve();
+      } else {
+        console.log(snapshot[key], obj[key]);
+        return Promise.reject(err);
+      }
+    });
+    return Promise.all(promiseArr);
+  });
+}
+
+testSetSingleKey().then(testSetMultipleKeys).then(testSnapshot).then(() => {
   console.log("All tests passed");
 }).catch((err) => {
   console.log(err);

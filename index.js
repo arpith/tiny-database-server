@@ -19,6 +19,11 @@ function getFromDatabase(key) {
   return Promise.resolve(database[key]);
 }
 
+function getSnapshot() {
+  let snapshot = JSON.stringify(database);
+  return Promise.resolve(snapshot);
+}
+
 function requestHandler(req) {
   // Checks the route (get or set) and returns a promise to do the operation
   let parsedURL = url.parse(req.url);
@@ -31,9 +36,14 @@ function requestHandler(req) {
     let value = splitQuery[1];
     return addToDatabase(key, value);
   } else if (parsedURL.pathname === '/get') {
-    // Will fail if multiple keys are requested
-    let key = parsedURL.query.split('key=')[1];
-    return getFromDatabase(key);
+    let splitQuery = parsedURL.query.split('=');
+    if ((splitQuery[0] === 'snapshot') && (splitQuery[1] === 'true')) {
+      return getSnapshot();
+    } else {
+      // Will fail if multiple keys are requested
+      let key = parsedURL.query.split('key=')[1];
+      return getFromDatabase(key);
+    }
   } else {
     return Promise.reject(400);
   }
