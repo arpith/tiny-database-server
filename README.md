@@ -22,6 +22,9 @@ This will return the value previously stored.
 
 This will return a JSON string of the database.
 
+## Persistence
+When the server starts up, a persistence client is also started that fetches a snapshot from the server every second and stores it on the filesystem. This file (database.json) is used to populate the database when the server is next started up. 
+
 ## Running the tests
 1. Install and start the server
 2. In another terminal window/tab run `npm test`
