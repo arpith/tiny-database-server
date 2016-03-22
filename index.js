@@ -66,9 +66,10 @@ function requestListener(req, res) {
 let json = fs.readFileSync('database.json');
 try {
   database = JSON.parse(json);
-  http.createServer(requestListener).listen(PORT, HOSTNAME, () => {
-    console.log(`Server running at http://${HOSTNAME}:${PORT}/`);
-  });
 } catch (e) {
   console.log(e);
 }
+
+http.createServer(requestListener).listen(PORT, HOSTNAME, () => {
+  console.log(`Server running at http://${HOSTNAME}:${PORT}/`);
+});
