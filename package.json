@@ -4,7 +4,7 @@
   "description": "An in-memory database server using node.js",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "node index.js && node persist.js",
     "test": "node test.js"
   },
   "repository": {
