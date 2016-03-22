@@ -1,6 +1,7 @@
 'use strict'
 
 const http = require('http');
+const fs = require('fs');
 const url = require('url');
 const querystring = require('querystring');
 
@@ -61,7 +62,13 @@ function requestListener(req, res) {
     res.end();
   });
 }
-   
-http.createServer(requestListener).listen(PORT, HOSTNAME, () => {
-  console.log(`Server running at http://${HOSTNAME}:${PORT}/`);
-});
+
+let json = fs.readFileSync('database.json');
+try {
+  database = JSON.parse(json);
+  http.createServer(requestListener).listen(PORT, HOSTNAME, () => {
+    console.log(`Server running at http://${HOSTNAME}:${PORT}/`);
+  });
+} catch (e) {
+  console.log(e);
+}
