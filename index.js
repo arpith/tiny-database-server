@@ -11,12 +11,14 @@ let database = {};
 
 function addToDatabase(key, value) {
   let unescapedValue = querystring.unescape(value);
-  database[key] = unescapedValue;
+  let unescapedKey = querystring.unescape(key);
+  database[unescapedKey] = unescapedValue;
   return Promise.resolve();
 }
 
 function getFromDatabase(key) {
-  return Promise.resolve(database[key]);
+  let unescapedKey = querystring.unescape(key);
+  return Promise.resolve(database[unescapedKey]);
 }
 
 function getSnapshot() {
