@@ -80,10 +80,6 @@ function testSnapshot() {
   }
   let promiseArr = keys.map(key => set(key, obj[key]));
   return Promise.all(promiseArr).then(getSnapshot).then((snapshot) => {
-    console.log("SNAPSHOT:");
-    console.log(snapshot);
-    console.log("LOCAL:");
-    console.log(obj);
     let promiseArr = keys.map((key) => {
       if (snapshot[key] === obj[key]) {
         return Promise.resolve();
